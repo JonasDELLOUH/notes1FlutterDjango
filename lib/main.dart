@@ -1,8 +1,23 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:notes1/homepage.dart';
+import 'package:notes1/notesApi.dart';
+import 'package:notes1/sqlite.dart';
 
-void main(){
+import 'note.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+    List<Note> notes;
+    notes = await Sqlite.selectAllNoteOffLine();
+    for (var note in notes) {
+      NotesApi().addNote(note.title, note.text);
+      Sqlite.updateNoteOnline(note.id);
+    }
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -15,7 +30,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: HomePage(),
     );
   }

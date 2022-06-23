@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:notes1/secret.dart';
+import 'package:notes1/sqlite.dart';
 
 class CreateNotePage extends StatefulWidget {
   const CreateNotePage({Key? key}) : super(key: key);
@@ -12,16 +12,13 @@ class CreateNotePage extends StatefulWidget {
 class _CreateNotePageState extends State<CreateNotePage> {
 
   Client client = Client();
+
+
   TextEditingController titlecontroller = TextEditingController();
   TextEditingController textcontroller = TextEditingController();
 
   addNote() async {
-    var response = await client.post(Uri.parse(baseURL),
-        body: {
-      "title" : "${titlecontroller.text}",
-          "text" : "${textcontroller.text}"
-        }
-    );
+    Sqlite.addNote(titlecontroller.text, textcontroller.text);
     Navigator.of(context).pop();
   }
 
@@ -40,16 +37,16 @@ class _CreateNotePageState extends State<CreateNotePage> {
           backgroundColor: Colors.teal,
         ),
         body: Container(
-          padding: EdgeInsets.only(top: 30, right: 30, left: 30),
+          padding: const EdgeInsets.only(top: 30, right: 30, left: 30),
           child: Column(
             children: [
               TextField(
-                decoration: InputDecoration.collapsed(
+                decoration: const InputDecoration.collapsed(
                   hintText: "Title for note",
                 ),
                 controller: titlecontroller,
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               TextField(
                 decoration: const InputDecoration.collapsed(
                   hintText: "Body for note",
@@ -59,8 +56,8 @@ class _CreateNotePageState extends State<CreateNotePage> {
               const SizedBox(height: 20,),
               ElevatedButton(
                 onPressed: () {addNote();},
-                child: const Text("Create"),
                 style: ElevatedButton.styleFrom(primary: Colors.teal),
+                child: const Text("Create"),
               )
             ],
           ),

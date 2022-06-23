@@ -1,10 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:notes1/create.dart';
-import 'package:notes1/secret.dart';
+import 'package:notes1/sqlite.dart';
 import 'package:notes1/update.dart';
 import 'package:notes1/view.dart';
 
@@ -22,17 +21,14 @@ class _HomePageState extends State<HomePage> {
   List<Note> notes = [];
 
   _retrieveNote() async {
-    notes = [];
-    List response = json.decode((await client.get(Uri.parse(baseURL))).body);
-    response.forEach((element) {
-      notes.add(Note.fromMap(element));
+    Sqlite.retrieveNotes().then((value){
+      notes = value;
     });
     setState(() {});
   }
 
   _deleteNote(int id) async {
-    var response = await client.delete(
-        Uri.parse(baseURL + id.toString() + "/"));
+    Sqlite.deleteNote(id);
     _retrieveNote();
   }
 
@@ -72,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                             UpdateNotePage(title: notes[i].title, id: notes[i]
                                 .id, text: notes[i].text,)));
                   }
-                    , icon: Icon(Icons.note_outlined),),
+                    , icon: const Icon(Icons.note_outlined),),
                   trailing: IconButton(onPressed: () {
                     _deleteNote(notes[i].id);
                   }, icon: const Icon(Icons.delete_forever_outlined),),
@@ -90,11 +86,11 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => CreateNotePage())
+              MaterialPageRoute(builder: (context) => const CreateNotePage())
           );
         },
-        child: const Icon(Icons.note_add),
         backgroundColor: Colors.teal,
+        child: const Icon(Icons.note_add),
       ),
     );
   }

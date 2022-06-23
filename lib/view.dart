@@ -18,12 +18,12 @@ class _ViewNotePageState extends State<ViewNotePage> {
         automaticallyImplyLeading: true,
         title:  Text(
           widget.title,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.teal,
       ),
       body: Container(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: Text(widget.text),
       ),
     );

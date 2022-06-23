@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:notes1/secret.dart';
+import 'package:notes1/sqlite.dart';
 
 class UpdateNotePage extends StatefulWidget {
   final String title;
@@ -19,12 +19,7 @@ class _UpdateNotePageState extends State<UpdateNotePage> {
   Client client = Client();
 
   _updateNote() async{
-    var response = await client.put(Uri.parse(baseURL + widget.id.toString() + "/"),
-      body: {
-      "title" : "${titlecontroller.text}",
-        "text" : "${textcontroller.text}"
-      }
-    );
+    Sqlite.updateNote(widget.id, titlecontroller.text, textcontroller.text);
     Navigator.of(context).pop();
   }
 
@@ -50,16 +45,16 @@ class _UpdateNotePageState extends State<UpdateNotePage> {
         backgroundColor: Colors.teal,
       ),
       body: Container(
-          padding: EdgeInsets.only(top: 30, right: 30, left: 30),
+          padding: const EdgeInsets.only(top: 30, right: 30, left: 30),
           child: Column(
             children: [
               TextField(
-                decoration: InputDecoration.collapsed(
+                decoration: const InputDecoration.collapsed(
                   hintText: "Title for note",
                 ),
                 controller: titlecontroller,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextField(
@@ -75,8 +70,8 @@ class _UpdateNotePageState extends State<UpdateNotePage> {
                 onPressed: () {
                   _updateNote();
                 },
-                child: const Text("Update"),
                 style: ElevatedButton.styleFrom(primary: Colors.teal),
+                child: const Text("Update"),
               )
             ],
           )),
