@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'note.dart';
 class Sqlite {
 
   static Future<void> createTables(sql.Database database) async {
     await database.execute(
-        """ CREATE TABLE IF NOT EXISTS notes (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, text TEXT, date_created, date_updated, isOnline); """);
+        """ CREATE TABLE IF NOT EXISTS notes (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, text TEXT, date_created TEXT, date_updated TEXT, isOnline TEXT); """);
   }
 
   static Future<sql.Database> db() async {

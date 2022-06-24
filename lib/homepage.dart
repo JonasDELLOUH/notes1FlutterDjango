@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:notes1/create.dart';
@@ -8,6 +9,7 @@ import 'package:notes1/update.dart';
 import 'package:notes1/view.dart';
 
 import 'note.dart';
+import 'notesApi.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,6 +26,15 @@ class _HomePageState extends State<HomePage> {
     Sqlite.retrieveNotes().then((value){
       notes = value;
     });
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      List<Note> notes;
+      notes = await Sqlite.selectAllNoteOffLine();
+      for (var note in notes) {
+        NotesApi().addNote(note.title, note.text);
+        Sqlite.updateNoteOnline(note.id);
+      }
+    }
     setState(() {});
   }
 
